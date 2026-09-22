@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proteus — Reference Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0d0d12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #9090a8;
+    }
+
+    h1 {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      opacity: 0.6;
+    }
+
+    canvas {
+      display: block;
+      /* Matches proteus-shell-native's default window so both shells lay
+         out identically at default size. CSS size only — the backing store
+         resolution (canvas width/height attrs) is set by proteus-host-web
+         itself, at CSS size × devicePixelRatio (M13.2's DPI change). */
+      width: 1280px;
+      height: 800px;
+      image-rendering: pixelated;
+    }
+
+    #status {
+      margin-top: 16px;
+      font-size: 12px;
+      opacity: 0.4;
+      min-height: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Proteus · Reference Demo</h1>
+
+  <canvas id="proteus-canvas"></canvas>
+  <p id="status">Loading…</p>
+
+  <script type="module">
+    // wasm-pack emits the glue module at pkg/proteus_shell_web.js.
+    // Run: wasm-pack build crates/proteus-shell-web --target web --out-dir www/pkg
+    //
+    // The full collapse M13.2's own module doc predicted: canvas/wgpu setup,
+    // DPI, resize, Pointer Events, visibility-pause, and the render loop
+    // itself live in proteus-host-web/Engine; texture churn, the photo
+    // gallery, and video (real <video>/MediaSource playback) all live in
+    // DemoApp/proteus-host-web's own hls_video module (M13.4). start() below
+    // is the entire JS surface this demo needs.
+    import init, { start } from './pkg/proteus_shell_web.js';
+
+    async function main() {
+      const status = document.getElementById('status');
+      try {
+        await init();
+        status.textContent = 'Loading assets…';
+        await start('proteus-canvas');
+        status.textContent = 'Running';
+      } catch (err) {
+        console.error('Proteus init error:', err);
+        status.textContent = `Error: ${err}`;
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>
