@@ -213,6 +213,24 @@ export class ProteusApp {
             throw takeFromExternrefTable0(ret[0]);
         }
     }
+    /**
+     * [`Self::merge_from`] with a per-source transition config (A-09). See
+     * [`Self::split_to_with_behavior`].
+     * @param {Handle} handle
+     * @param {Float64Array} source_ids
+     * @param {any} config
+     * @param {any} layout
+     * @param {Function} child_behavior
+     */
+    mergeFromWithBehavior(handle, source_ids, config, layout, child_behavior) {
+        _assertClass(handle, Handle);
+        const ptr0 = passArrayF64ToWasm0(source_ids, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.proteusapp_mergeFromWithBehavior(this.__wbg_ptr, handle.__wbg_ptr, ptr0, len0, config, layout, child_behavior);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
+    }
     constructor() {
         const ret = wasm.proteusapp_new();
         this.__wbg_ptr = ret;
@@ -290,6 +308,17 @@ export class ProteusApp {
     onRelease(handle, cb) {
         _assertClass(handle, Handle);
         wasm.proteusapp_onRelease(this.__wbg_ptr, handle.__wbg_ptr, cb);
+    }
+    /**
+     * Fires when a transition targeting `handle` finishes — see
+     * `proteus-sdk`'s `Handle::on_transition_complete` for which handle
+     * that is per topology.
+     * @param {Handle} handle
+     * @param {Function} cb
+     */
+    onTransitionComplete(handle, cb) {
+        _assertClass(handle, Handle);
+        wasm.proteusapp_onTransitionComplete(this.__wbg_ptr, handle.__wbg_ptr, cb);
     }
     /**
      * Call when the pointer leaves the window/canvas — distinct from
@@ -460,6 +489,27 @@ export class ProteusApp {
         const ptr0 = passArrayF64ToWasm0(target_ids, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.proteusapp_splitTo(this.__wbg_ptr, handle.__wbg_ptr, ptr0, len0, config, strategy);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
+    }
+    /**
+     * [`Self::split_to`] with a per-target transition config (A-09).
+     *
+     * `child_behavior` is a JS `(index, total) => TransitionConfig`. It is
+     * called once per target here, before the request is enqueued — never
+     * from inside an ECS system — so an ordinary JS closure is safe.
+     * @param {Handle} handle
+     * @param {Float64Array} target_ids
+     * @param {any} config
+     * @param {any} strategy
+     * @param {Function} child_behavior
+     */
+    splitToWithBehavior(handle, target_ids, config, strategy, child_behavior) {
+        _assertClass(handle, Handle);
+        const ptr0 = passArrayF64ToWasm0(target_ids, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.proteusapp_splitToWithBehavior(this.__wbg_ptr, handle.__wbg_ptr, ptr0, len0, config, strategy, child_behavior);
         if (ret[1]) {
             throw takeFromExternrefTable0(ret[0]);
         }
@@ -2875,12 +2925,12 @@ function __wbg_get_imports() {
             arg0.writeTexture(arg1, getArrayU8FromWasm0(arg2, arg3), arg4, arg5);
         }, arguments); },
         __wbindgen_cast_0000000000000001: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 1909, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 1918, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___wasm_bindgen_4885b863f3debd44___JsValue______true_);
             return ret;
         },
         __wbindgen_cast_0000000000000002: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 3805, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 3814, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___wasm_bindgen_4885b863f3debd44___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_4885b863f3debd44___JsError___true_);
             return ret;
         },

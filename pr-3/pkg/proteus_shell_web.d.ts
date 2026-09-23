@@ -82,6 +82,11 @@ export class ProteusApp {
      * objects.
      */
     mergeFrom(handle: Handle, source_ids: Float64Array, config: any, layout: any): void;
+    /**
+     * [`Self::merge_from`] with a per-source transition config (A-09). See
+     * [`Self::split_to_with_behavior`].
+     */
+    mergeFromWithBehavior(handle: Handle, source_ids: Float64Array, config: any, layout: any, child_behavior: Function): void;
     constructor();
     onBlur(handle: Handle, cb: Function): void;
     onClick(handle: Handle, cb: Function): void;
@@ -92,6 +97,12 @@ export class ProteusApp {
     onHoverExit(handle: Handle, cb: Function): void;
     onPress(handle: Handle, cb: Function): void;
     onRelease(handle: Handle, cb: Function): void;
+    /**
+     * Fires when a transition targeting `handle` finishes — see
+     * `proteus-sdk`'s `Handle::on_transition_complete` for which handle
+     * that is per topology.
+     */
+    onTransitionComplete(handle: Handle, cb: Function): void;
     /**
      * Call when the pointer leaves the window/canvas — distinct from
      * `pointerMoved`, since `proteus-sdk`'s contract represents "no
@@ -163,6 +174,14 @@ export class ProteusApp {
      * `TransitionConfig`/`SplitStrategy` TS types — see `ts/src/types.ts`.
      */
     splitTo(handle: Handle, target_ids: Float64Array, config: any, strategy: any): void;
+    /**
+     * [`Self::split_to`] with a per-target transition config (A-09).
+     *
+     * `child_behavior` is a JS `(index, total) => TransitionConfig`. It is
+     * called once per target here, before the request is enqueued — never
+     * from inside an ECS system — so an ordinary JS closure is safe.
+     */
+    splitToWithBehavior(handle: Handle, target_ids: Float64Array, config: any, strategy: any, child_behavior: Function): void;
     /**
      * [`Self::split_to`], but with each target's rest geometry given
      * explicitly instead of resolved from its own declared/live
@@ -251,6 +270,7 @@ export interface InitOutput {
     readonly proteusapp_freeResources: (a: number, b: number) => [number, number];
     readonly proteusapp_get: (a: number, b: number) => any;
     readonly proteusapp_mergeFrom: (a: number, b: number, c: number, d: number, e: any, f: any) => [number, number];
+    readonly proteusapp_mergeFromWithBehavior: (a: number, b: number, c: number, d: number, e: any, f: any, g: any) => [number, number];
     readonly proteusapp_new: () => number;
     readonly proteusapp_onBlur: (a: number, b: number, c: any) => void;
     readonly proteusapp_onClick: (a: number, b: number, c: any) => void;
@@ -261,6 +281,7 @@ export interface InitOutput {
     readonly proteusapp_onHoverExit: (a: number, b: number, c: any) => void;
     readonly proteusapp_onPress: (a: number, b: number, c: any) => void;
     readonly proteusapp_onRelease: (a: number, b: number, c: any) => void;
+    readonly proteusapp_onTransitionComplete: (a: number, b: number, c: any) => void;
     readonly proteusapp_pointerLeft: (a: number) => void;
     readonly proteusapp_pointerMoved: (a: number, b: number, c: number) => void;
     readonly proteusapp_pointerPressed: (a: number) => void;
@@ -275,6 +296,7 @@ export interface InitOutput {
     readonly proteusapp_signalDestroy: (a: number, b: number) => void;
     readonly proteusapp_signalSet: (a: number, b: number, c: number, d: number, e: any, f: number) => [number, number];
     readonly proteusapp_splitTo: (a: number, b: number, c: number, d: number, e: any, f: any) => [number, number];
+    readonly proteusapp_splitToWithBehavior: (a: number, b: number, c: number, d: number, e: any, f: any, g: any) => [number, number];
     readonly proteusapp_splitToWithStates: (a: number, b: number, c: any, d: any, e: any) => [number, number];
     readonly proteusapp_texture: (a: number, b: number) => number;
     readonly proteusapp_textureState: (a: number, b: number) => any;
