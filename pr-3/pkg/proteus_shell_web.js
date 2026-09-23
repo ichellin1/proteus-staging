@@ -358,6 +358,19 @@ export class ProteusApp {
         }
     }
     /**
+     * Sets `handle`'s alpha multiplier — see `proteus-sdk`'s
+     * `Handle::set_opacity`.
+     * @param {Handle} handle
+     * @param {number} opacity
+     */
+    setOpacity(handle, opacity) {
+        _assertClass(handle, Handle);
+        const ret = wasm.proteusapp_setOpacity(this.__wbg_ptr, handle.__wbg_ptr, opacity);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
+    }
+    /**
      * Shows an already-registered texture on `handle`, replacing whatever
      * image/text/composite it previously showed (M13.8 parity audit) —
      * `false` (no-op) if `texture` is evicted/unknown. See `proteus-sdk`'s
@@ -374,6 +387,18 @@ export class ProteusApp {
             throw takeFromExternrefTable0(ret[1]);
         }
         return ret[0] !== 0;
+    }
+    /**
+     * Shows or hides `handle` — see `proteus-sdk`'s `Handle::set_visible`.
+     * @param {Handle} handle
+     * @param {boolean} visible
+     */
+    setVisible(handle, visible) {
+        _assertClass(handle, Handle);
+        const ret = wasm.proteusapp_setVisible(this.__wbg_ptr, handle.__wbg_ptr, visible);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
     }
     /**
      * `owner`, if present, is a `Handle.id()` value — not an opaque `Handle`
@@ -2850,12 +2875,12 @@ function __wbg_get_imports() {
             arg0.writeTexture(arg1, getArrayU8FromWasm0(arg2, arg3), arg4, arg5);
         }, arguments); },
         __wbindgen_cast_0000000000000001: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 1900, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 1909, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___wasm_bindgen_4885b863f3debd44___JsValue______true_);
             return ret;
         },
         __wbindgen_cast_0000000000000002: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 3796, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 3805, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___wasm_bindgen_4885b863f3debd44___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_4885b863f3debd44___JsError___true_);
             return ret;
         },

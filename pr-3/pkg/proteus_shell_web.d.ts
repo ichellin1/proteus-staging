@@ -121,12 +121,21 @@ export class ProteusApp {
      */
     setInteractive(handle: Handle, interactive: boolean): void;
     /**
+     * Sets `handle`'s alpha multiplier — see `proteus-sdk`'s
+     * `Handle::set_opacity`.
+     */
+    setOpacity(handle: Handle, opacity: number): void;
+    /**
      * Shows an already-registered texture on `handle`, replacing whatever
      * image/text/composite it previously showed (M13.8 parity audit) —
      * `false` (no-op) if `texture` is evicted/unknown. See `proteus-sdk`'s
      * `Handle::set_texture` doc.
      */
     setTexture(handle: Handle, texture: TextureHandle): boolean;
+    /**
+     * Shows or hides `handle` — see `proteus-sdk`'s `Handle::set_visible`.
+     */
+    setVisible(handle: Handle, visible: boolean): void;
     /**
      * `owner`, if present, is a `Handle.id()` value — not an opaque `Handle`
      * object. wasm-bindgen doesn't support `Option<&CustomStruct>`
@@ -259,7 +268,9 @@ export interface InitOutput {
     readonly proteusapp_removeChild: (a: number, b: number, c: number, d: number) => [number, number];
     readonly proteusapp_setDeclaredGeometry: (a: number, b: number, c: any) => [number, number];
     readonly proteusapp_setInteractive: (a: number, b: number, c: number) => [number, number];
+    readonly proteusapp_setOpacity: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_setTexture: (a: number, b: number, c: number) => [number, number, number];
+    readonly proteusapp_setVisible: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_signal: (a: number, b: number, c: number) => number;
     readonly proteusapp_signalDestroy: (a: number, b: number) => void;
     readonly proteusapp_signalSet: (a: number, b: number, c: number, d: number, e: any, f: number) => [number, number];
