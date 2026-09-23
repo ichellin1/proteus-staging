@@ -32,6 +32,12 @@ export class ProteusApp {
      */
     animateTo(handle: Handle, to: any, config: any): void;
     /**
+     * Pack already-decoded RGBA pixels (`rgba.len() == width * height * 4`)
+     * into `main_atlas` — the raw-pixel counterpart of
+     * [`Self::load_texture`], for procedurally generated content.
+     */
+    bakeTexture(width: number, height: number, rgba: Uint8Array, request: any): TextureHandle;
+    /**
      * `undefined` before this component's `Image` has finished baking, or
      * if it was never given one (M13.8 parity audit) — see `proteus-sdk`'s
      * `Handle::baked_image_size` doc.
@@ -76,6 +82,16 @@ export class ProteusApp {
      * Returns `undefined` if `handle` no longer refers to a live component.
      */
     get(handle: Handle): any;
+    /**
+     * Decode an encoded image (PNG/JPEG/…) and pack it into `main_atlas`,
+     * returning a `TextureHandle` — A-04. Synchronous: the pixels are on
+     * the GPU when this returns, so there is no "ready" event to wait for.
+     *
+     * `undefined` if the bytes could not be decoded. Replaces the old
+     * workaround of spawning an off-screen component with `image: {bytes}`
+     * and polling `bakedImageSize()` every frame.
+     */
+    loadTexture(bytes: Uint8Array, request: any): TextureHandle | undefined;
     /**
      * N→1 group transition (M13.8) — `source_ids` merge into `handle`. See
      * [`Self::split_to`]'s doc for why sources cross as ids, not `Handle`
@@ -127,6 +143,11 @@ export class ProteusApp {
      */
     setDeclaredGeometry(handle: Handle, state: any): void;
     /**
+     * Disables or re-enables `handle` — see `proteus-sdk`'s
+     * `Handle::set_disabled`.
+     */
+    setDisabled(handle: Handle, disabled: boolean): void;
+    /**
      * Toggles `handle`'s click/hover eligibility at runtime (M13.8 parity
      * audit) — see `proteus-sdk`'s `Handle::set_interactive` doc.
      */
@@ -143,6 +164,12 @@ export class ProteusApp {
      * `Handle::set_texture` doc.
      */
     setTexture(handle: Handle, texture: TextureHandle): boolean;
+    /**
+     * Sets whether `handle` receives input mid-transition. Pass `null` or
+     * `undefined` to remove the opt-in — see `proteus-sdk`'s
+     * `Handle::set_transitioning_config`.
+     */
+    setTransitioningConfig(handle: Handle, config: any): void;
     /**
      * Shows or hides `handle` — see `proteus-sdk`'s `Handle::set_visible`.
      */
@@ -242,7 +269,7 @@ export class TextureHandle {
  * from `setup`'s own closure rather than expect it passed again; see
  * `ts/src/index.ts`'s `mount()` wrapper.
  */
-export function mount(canvas_id: string, setup: Function, update?: Function | null): Promise<void>;
+export function mount(canvas_id: string, setup: Function, update: Function | null | undefined, config: any): Promise<void>;
 
 /**
  * Mount the reference demo on the `<canvas>` element with the given `id`.
@@ -257,10 +284,11 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
     readonly start: (a: number, b: number) => any;
-    readonly mount: (a: number, b: number, c: any, d: number) => any;
+    readonly mount: (a: number, b: number, c: any, d: number, e: any) => any;
     readonly __wbg_proteusapp_free: (a: number, b: number) => void;
     readonly proteusapp_addChild: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_animateTo: (a: number, b: number, c: any, d: any) => [number, number];
+    readonly proteusapp_bakeTexture: (a: number, b: number, c: number, d: number, e: number, f: any) => number;
     readonly proteusapp_bakedImageSize: (a: number, b: number) => any;
     readonly proteusapp_bakedTextSize: (a: number, b: number) => any;
     readonly proteusapp_centerCropToSquare: (a: number, b: number) => [number, number, number];
@@ -269,6 +297,7 @@ export interface InitOutput {
     readonly proteusapp_destroy: (a: number, b: number) => [number, number];
     readonly proteusapp_freeResources: (a: number, b: number) => [number, number];
     readonly proteusapp_get: (a: number, b: number) => any;
+    readonly proteusapp_loadTexture: (a: number, b: number, c: number, d: any) => number;
     readonly proteusapp_mergeFrom: (a: number, b: number, c: number, d: number, e: any, f: any) => [number, number];
     readonly proteusapp_mergeFromWithBehavior: (a: number, b: number, c: number, d: number, e: any, f: any, g: any) => [number, number];
     readonly proteusapp_new: () => number;
@@ -288,9 +317,11 @@ export interface InitOutput {
     readonly proteusapp_pointerReleased: (a: number) => void;
     readonly proteusapp_removeChild: (a: number, b: number, c: number, d: number) => [number, number];
     readonly proteusapp_setDeclaredGeometry: (a: number, b: number, c: any) => [number, number];
+    readonly proteusapp_setDisabled: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_setInteractive: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_setOpacity: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_setTexture: (a: number, b: number, c: number) => [number, number, number];
+    readonly proteusapp_setTransitioningConfig: (a: number, b: number, c: any) => [number, number];
     readonly proteusapp_setVisible: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_signal: (a: number, b: number, c: number) => number;
     readonly proteusapp_signalDestroy: (a: number, b: number) => void;

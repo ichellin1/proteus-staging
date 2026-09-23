@@ -88,6 +88,22 @@ export class ProteusApp {
         }
     }
     /**
+     * Pack already-decoded RGBA pixels (`rgba.len() == width * height * 4`)
+     * into `main_atlas` — the raw-pixel counterpart of
+     * [`Self::load_texture`], for procedurally generated content.
+     * @param {number} width
+     * @param {number} height
+     * @param {Uint8Array} rgba
+     * @param {any} request
+     * @returns {TextureHandle}
+     */
+    bakeTexture(width, height, rgba, request) {
+        const ptr0 = passArray8ToWasm0(rgba, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.proteusapp_bakeTexture(this.__wbg_ptr, width, height, ptr0, len0, request);
+        return TextureHandle.__wrap(ret);
+    }
+    /**
      * `undefined` before this component's `Image` has finished baking, or
      * if it was never given one (M13.8 parity audit) — see `proteus-sdk`'s
      * `Handle::baked_image_size` doc.
@@ -194,6 +210,24 @@ export class ProteusApp {
         _assertClass(handle, Handle);
         const ret = wasm.proteusapp_get(this.__wbg_ptr, handle.__wbg_ptr);
         return ret;
+    }
+    /**
+     * Decode an encoded image (PNG/JPEG/…) and pack it into `main_atlas`,
+     * returning a `TextureHandle` — A-04. Synchronous: the pixels are on
+     * the GPU when this returns, so there is no "ready" event to wait for.
+     *
+     * `undefined` if the bytes could not be decoded. Replaces the old
+     * workaround of spawning an off-screen component with `image: {bytes}`
+     * and polling `bakedImageSize()` every frame.
+     * @param {Uint8Array} bytes
+     * @param {any} request
+     * @returns {TextureHandle | undefined}
+     */
+    loadTexture(bytes, request) {
+        const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.proteusapp_loadTexture(this.__wbg_ptr, ptr0, len0, request);
+        return ret === 0 ? undefined : TextureHandle.__wrap(ret);
     }
     /**
      * N→1 group transition (M13.8) — `source_ids` merge into `handle`. See
@@ -374,6 +408,19 @@ export class ProteusApp {
         }
     }
     /**
+     * Disables or re-enables `handle` — see `proteus-sdk`'s
+     * `Handle::set_disabled`.
+     * @param {Handle} handle
+     * @param {boolean} disabled
+     */
+    setDisabled(handle, disabled) {
+        _assertClass(handle, Handle);
+        const ret = wasm.proteusapp_setDisabled(this.__wbg_ptr, handle.__wbg_ptr, disabled);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
+    }
+    /**
      * Toggles `handle`'s click/hover eligibility at runtime (M13.8 parity
      * audit) — see `proteus-sdk`'s `Handle::set_interactive` doc.
      * @param {Handle} handle
@@ -416,6 +463,20 @@ export class ProteusApp {
             throw takeFromExternrefTable0(ret[1]);
         }
         return ret[0] !== 0;
+    }
+    /**
+     * Sets whether `handle` receives input mid-transition. Pass `null` or
+     * `undefined` to remove the opt-in — see `proteus-sdk`'s
+     * `Handle::set_transitioning_config`.
+     * @param {Handle} handle
+     * @param {any} config
+     */
+    setTransitioningConfig(handle, config) {
+        _assertClass(handle, Handle);
+        const ret = wasm.proteusapp_setTransitioningConfig(this.__wbg_ptr, handle.__wbg_ptr, config);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
     }
     /**
      * Shows or hides `handle` — see `proteus-sdk`'s `Handle::set_visible`.
@@ -641,13 +702,14 @@ if (Symbol.dispose) TextureHandle.prototype[Symbol.dispose] = TextureHandle.prot
  * `ts/src/index.ts`'s `mount()` wrapper.
  * @param {string} canvas_id
  * @param {Function} setup
- * @param {Function | null} [update]
+ * @param {Function | null | undefined} update
+ * @param {any} config
  * @returns {Promise<void>}
  */
-export function mount(canvas_id, setup, update) {
+export function mount(canvas_id, setup, update, config) {
     const ptr0 = passStringToWasm0(canvas_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.mount(ptr0, len0, setup, isLikeNone(update) ? 0 : addToExternrefTable0(update));
+    const ret = wasm.mount(ptr0, len0, setup, isLikeNone(update) ? 0 : addToExternrefTable0(update), config);
     return ret;
 }
 
@@ -2925,37 +2987,37 @@ function __wbg_get_imports() {
             arg0.writeTexture(arg1, getArrayU8FromWasm0(arg2, arg3), arg4, arg5);
         }, arguments); },
         __wbindgen_cast_0000000000000001: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 1918, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 1931, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___wasm_bindgen_4885b863f3debd44___JsValue______true_);
             return ret;
         },
         __wbindgen_cast_0000000000000002: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 3814, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 3829, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___wasm_bindgen_4885b863f3debd44___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_4885b863f3debd44___JsError___true_);
             return ret;
         },
         __wbindgen_cast_0000000000000003: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [F64], shim_idx: 108, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [F64], shim_idx: 181, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___f64______true_);
             return ret;
         },
         __wbindgen_cast_0000000000000004: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [NamedExternref("Array<any>")], shim_idx: 104, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [NamedExternref("Array<any>")], shim_idx: 177, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___js_sys_b69d6bf4f8b2c717___Array______true_);
             return ret;
         },
         __wbindgen_cast_0000000000000005: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [NamedExternref("Event")], shim_idx: 104, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [NamedExternref("Event")], shim_idx: 177, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___js_sys_b69d6bf4f8b2c717___Array______true__4);
             return ret;
         },
         __wbindgen_cast_0000000000000006: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [NamedExternref("PointerEvent")], shim_idx: 104, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [NamedExternref("PointerEvent")], shim_idx: 177, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke___js_sys_b69d6bf4f8b2c717___Array______true__5);
             return ret;
         },
         __wbindgen_cast_0000000000000007: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [], shim_idx: 110, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [], shim_idx: 183, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen_4885b863f3debd44___convert__closures_____invoke_______true_);
             return ret;
         },

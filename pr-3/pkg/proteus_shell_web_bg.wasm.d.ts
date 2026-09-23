@@ -2,10 +2,11 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export const start: (a: number, b: number) => any;
-export const mount: (a: number, b: number, c: any, d: number) => any;
+export const mount: (a: number, b: number, c: any, d: number, e: any) => any;
 export const __wbg_proteusapp_free: (a: number, b: number) => void;
 export const proteusapp_addChild: (a: number, b: number, c: number) => [number, number];
 export const proteusapp_animateTo: (a: number, b: number, c: any, d: any) => [number, number];
+export const proteusapp_bakeTexture: (a: number, b: number, c: number, d: number, e: number, f: any) => number;
 export const proteusapp_bakedImageSize: (a: number, b: number) => any;
 export const proteusapp_bakedTextSize: (a: number, b: number) => any;
 export const proteusapp_centerCropToSquare: (a: number, b: number) => [number, number, number];
@@ -14,6 +15,7 @@ export const proteusapp_copyBakedImageFrom: (a: number, b: number, c: number) =>
 export const proteusapp_destroy: (a: number, b: number) => [number, number];
 export const proteusapp_freeResources: (a: number, b: number) => [number, number];
 export const proteusapp_get: (a: number, b: number) => any;
+export const proteusapp_loadTexture: (a: number, b: number, c: number, d: any) => number;
 export const proteusapp_mergeFrom: (a: number, b: number, c: number, d: number, e: any, f: any) => [number, number];
 export const proteusapp_mergeFromWithBehavior: (a: number, b: number, c: number, d: number, e: any, f: any, g: any) => [number, number];
 export const proteusapp_new: () => number;
@@ -33,9 +35,11 @@ export const proteusapp_pointerPressed: (a: number) => void;
 export const proteusapp_pointerReleased: (a: number) => void;
 export const proteusapp_removeChild: (a: number, b: number, c: number, d: number) => [number, number];
 export const proteusapp_setDeclaredGeometry: (a: number, b: number, c: any) => [number, number];
+export const proteusapp_setDisabled: (a: number, b: number, c: number) => [number, number];
 export const proteusapp_setInteractive: (a: number, b: number, c: number) => [number, number];
 export const proteusapp_setOpacity: (a: number, b: number, c: number) => [number, number];
 export const proteusapp_setTexture: (a: number, b: number, c: number) => [number, number, number];
+export const proteusapp_setTransitioningConfig: (a: number, b: number, c: any) => [number, number];
 export const proteusapp_setVisible: (a: number, b: number, c: number) => [number, number];
 export const proteusapp_signal: (a: number, b: number, c: number) => number;
 export const proteusapp_signalDestroy: (a: number, b: number) => void;
