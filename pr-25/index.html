@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proteus — Reference Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0d0d12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #9090a8;
+    }
+
+    h1 {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      opacity: 0.6;
+    }
+
+    canvas {
+      display: block;
+      /* Matches proteus-shell-native's default window so both shells lay
+         out identically at default size. CSS size only — the backing store
+         resolution (canvas width/height attrs) is set by proteus-host-web
+         itself, at CSS size × devicePixelRatio (M13.2's DPI change). */
+      width: 1280px;
+      height: 800px;
+      image-rendering: pixelated;
+    }
+
+    #status {
+      margin-top: 16px;
+      font-size: 12px;
+      opacity: 0.4;
+      min-height: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Proteus · Reference Demo</h1>
+
+  <canvas id="proteus-canvas"></canvas>
+  <p id="status">Loading…</p>
+
+  <script type="module">
+    // wasm-pack emits the glue module at pkg/proteus_shell_web.js.
+    // Run: wasm-pack build crates/proteus-shell-web --target web --out-dir www/pkg
+    //
+    // Everything else is in Rust: the canvas, the GPU, input and the frame
+    // loop in proteus-host-web, the demo in proteus-demo, and its HLS video
+    // player in proteus-shell-web. start() is all this page calls.
+    import init, { start } from './pkg/proteus_shell_web.js';
+
+    async function main() {
+      const status = document.getElementById('status');
+      try {
+        await init();
+        status.textContent = 'Loading assets…';
+        await start('proteus-canvas');
+        status.textContent = 'Running';
+      } catch (err) {
+        console.error('Proteus init error:', err);
+        status.textContent = `Error: ${err}`;
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>
