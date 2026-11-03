@@ -67,6 +67,7 @@ export const proteusapp_setNavigatingActions: (a: number, b: number, c: number) 
 export const proteusapp_setNeighbour: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number];
 export const proteusapp_setOpacity: (a: number, b: number, c: number) => [number, number];
 export const proteusapp_setReadingDirection: (a: number, b: number, c: number) => [number, number];
+export const proteusapp_setStyleTransition: (a: number, b: number, c: any) => [number, number];
 export const proteusapp_setText: (a: number, b: number, c: any) => [number, number];
 export const proteusapp_setTexture: (a: number, b: number, c: number) => [number, number, number];
 export const proteusapp_setTransitionInteraction: (a: number, b: number, c: any) => [number, number];

@@ -321,6 +321,12 @@ export class ProteusApp {
      */
     setReadingDirection(direction: string): void;
     /**
+     * Calls [`Handle::set_style_transition`](sdk::Handle::set_style_transition).
+     * `config` is a `TransitionConfig` object, or `undefined` for the
+     * default. Throws if `config` isn't valid.
+     */
+    setStyleTransition(handle: Handle, config: any): void;
+    /**
      * Calls [`Handle::set_text`](sdk::Handle::set_text).
      */
     setText(handle: Handle, text: any): void;
@@ -530,6 +536,7 @@ export interface InitOutput {
     readonly proteusapp_setNeighbour: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number];
     readonly proteusapp_setOpacity: (a: number, b: number, c: number) => [number, number];
     readonly proteusapp_setReadingDirection: (a: number, b: number, c: number) => [number, number];
+    readonly proteusapp_setStyleTransition: (a: number, b: number, c: any) => [number, number];
     readonly proteusapp_setText: (a: number, b: number, c: any) => [number, number];
     readonly proteusapp_setTexture: (a: number, b: number, c: number) => [number, number, number];
     readonly proteusapp_setTransitionInteraction: (a: number, b: number, c: any) => [number, number];
